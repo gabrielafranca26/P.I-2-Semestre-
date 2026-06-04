@@ -1,5 +1,16 @@
-function renderClientes() {
+async function carregarClientes() {
+
+    const resposta = await fetch(
+        "API/clientes/listar.php"
+    );
+
+    return await resposta.json();
+
+}
+
+async function renderClientes() {
     const area = document.getElementById('content-area');
+    const clientes = await carregarClientes();
     area.innerHTML = `
         <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-800" id="form-title-clientes">Novo Cliente</h3>
@@ -35,12 +46,13 @@ function renderClientes() {
                         <th class="p-4 font-semibold text-sm text-gray-700">Nome / Empresa</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Tipo / Documento</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Contato</th>
+                        <th class="p-4 font-semibold text-sm text-gray-700">E-mail</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Rota / Endereço</th>
                         <th class="p-4 font-semibold text-sm text-gray-700 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${db.clientes.map((c, idx) => `
+                    ${clientes.map((c, idx) => `
                         <tr class="border-b hover:bg-gray-50 text-sm">
                             <td class="p-4 font-medium text-gray-900">${c.nome}</td>
                             <td class="p-4 text-gray-600 font-mono text-xs">
@@ -48,6 +60,7 @@ function renderClientes() {
                                 ${c.doc || 'Não informado'}
                             </td>
                             <td class="p-4 text-gray-600">${c.tel}</td>
+                            <td class="p-4 text-gray-600">${c.email || 'Não informado'}</td>
                             <td class="p-4 text-gray-600">${c.rota}</td>
                             <td class="p-4 text-center space-x-2">
                                 <button onclick="editCliente(${idx})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
