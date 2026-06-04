@@ -1,6 +1,11 @@
+/* ========== VARIÁVEIS ========== */
+
 let clientes = [];
 let clienteIdEditando = null;
 
+/* ========== FUNÇÕES ========== */
+
+/* ===== FUNÇÃO - API LISTAR CLIENTES ===== */
 async function carregarClientes() {
 
     const resposta = await fetch(
@@ -13,6 +18,7 @@ async function carregarClientes() {
 
 }
 
+/* ===== FUNÇÃO - CONSTRUÇÃO DA PÁGINA ===== */
 async function renderClientes() {
     const area = document.getElementById('content-area');
     const clientes = await carregarClientes();
@@ -69,7 +75,7 @@ async function renderClientes() {
                             <td class="p-4 text-gray-600">${c.rota}</td>
                             <td class="p-4 text-center space-x-2">
                                 <button onclick="editCliente(${idx})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
-                                <button onclick="deleteItem('clientes', ${idx}, renderClientes)" class="text-red-600 hover:text-red-900 font-medium">Excluir</button>
+                                <button onclick="excluirCliente(${c.id})" class="text-red-600 hover:text-red-900 font-medium">Excluir</button>
                             </td>
                         </tr>
                     `).join('')}
@@ -79,7 +85,7 @@ async function renderClientes() {
     `;
 }
 
-// Muda o placeholder do campo baseado no rádio ativo
+/* Muda o placeholder do campo baseado no rádio ativo */
 function toggleDocumentLabel(type) {
     const docInput = document.getElementById('c-doc');
     if (docInput) {
@@ -87,6 +93,7 @@ function toggleDocumentLabel(type) {
     }
 }
 
+/* ===== FUNÇÃO - API INSERIR E EDITAR CLIENTE ===== */
 async function saveCliente(e) {
     e.preventDefault();
 
@@ -166,4 +173,50 @@ function editCliente(idx) {
     const tipo = item.tipoDoc || 'CNPJ';
     document.querySelector(`input[name="tipo_doc"][value="${tipo}"]`).checked = true;
     toggleDocumentLabel(tipo);
+}
+
+/* ===== FUNÇÃO ENCLUIR CLIENTE ===== */
+async function excluirCliente(id) {
+
+    if(!confirm("Deseja realmente excluir este cliente?")){
+        return;
+    }
+
+    try{
+
+        const resposta = await fetch(
+            "API/clientes/excluir.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if(resultado.sucesso){
+
+            alert(resultado.mensagem);
+
+            renderClientes();
+
+        }else{
+
+            alert("Erro: " + resultado.mensagem);
+
+        }
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao conectar com o servidor.");
+
+    }
+
 }

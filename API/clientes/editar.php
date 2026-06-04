@@ -1,7 +1,9 @@
 <?php
 
+/* Conectando ao banco */
 require_once("../../config/conexao.php");
 
+/* Recebendo dados */
 $dados = json_decode(
     file_get_contents("php://input"),
     true
@@ -24,6 +26,7 @@ $tel     = $dados["tel"];
 $email   = $dados["email"];
 $rota    = $dados["rota"];
 
+/* Preparando, blindando e executando o comando SQL conforme o tipo de documento */
 if($tipoDoc == "CPF"){
 
     $sql = "UPDATE cliente
