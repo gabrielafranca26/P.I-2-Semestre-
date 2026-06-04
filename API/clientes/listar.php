@@ -15,6 +15,7 @@ $clientes = [];
 /* Preenchendo o vetor com o resultado */
 while($linha = $resultado->fetch_assoc()){
 
+    /* Verificando o tipo de documento para formatar a exibição */
      if(!empty($linha["cpf_cliente"])){
 
         $clientes[] = [

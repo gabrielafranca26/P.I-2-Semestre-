@@ -1,9 +1,9 @@
 <?php
 
-// Conecta ao banco
+/* Conecta ao banco */
 require_once("../../config/conexao.php");
 
-// Recebe os dados enviados pelo JavaScript
+/* Recebe os dados enviados pelo JavaScript */
 $dados = json_decode(file_get_contents("php://input"), true);
 
 if(!$dados){
@@ -13,7 +13,7 @@ if(!$dados){
     ]));
 }
 
-// Captura os valores recebidos
+/* Captura os valores recebidos */
 $tipoDoc = $dados["tipoDoc"];
 $nome    = $dados["nome"];
 $doc     = $dados["doc"];
@@ -21,7 +21,7 @@ $tel     = $dados["tel"];
 $email   = $dados["email"];
 $rota    = $dados["rota"];
 
-// Se for CPF
+/* Se for CPF */
 if($tipoDoc == "CPF"){
 
     $sql = "INSERT INTO cliente (
@@ -45,7 +45,7 @@ if($tipoDoc == "CPF"){
     );
 }
 
-// Se for CNPJ
+/* Se for CNPJ */
 else{
 
     $sql = "INSERT INTO cliente (
@@ -69,7 +69,7 @@ else{
     );
 }
 
-// Executa o INSERT
+/* Executa o INSERT */
 if($stmt->execute()){
 
     echo json_encode([

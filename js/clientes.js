@@ -1,10 +1,15 @@
+let clientes = [];
+let clienteIdEditando = null;
+
 async function carregarClientes() {
 
     const resposta = await fetch(
         "API/clientes/listar.php"
     );
 
-    return await resposta.json();
+    clientes = await resposta.json();
+
+    return clientes;
 
 }
 
@@ -90,6 +95,7 @@ async function saveCliente(e) {
     ).value;
 
     const data = {
+        id: clienteIdEditando,
         tipoDoc: tipoDocAtivo,
         nome: document.getElementById('c-nome').value,
         doc: document.getElementById('c-doc').value,
@@ -100,8 +106,12 @@ async function saveCliente(e) {
 
     try {
 
+        const url = clienteIdEditando
+            ? "API/clientes/editar.php"
+            : "API/clientes/inserir.php";  
+
         const resposta = await fetch(
-            "API/clientes/inserir.php",
+            url,
             {
                 method: "POST",
                 headers: {
@@ -117,7 +127,11 @@ async function saveCliente(e) {
 
             alert(resultado.mensagem);
 
-            document.querySelector("form").reset();
+            clienteIdEditando = null;
+            editIndex = null;
+
+            renderClientes();
+
 
         }else{
 
@@ -136,7 +150,8 @@ async function saveCliente(e) {
 
 function editCliente(idx) {
     editIndex = idx;
-    const item = db.clientes[idx];
+    const item = clientes[idx];
+    clienteIdEditando = item.id;
     
     document.getElementById('form-title-clientes').innerText = "Editar Cliente";
     document.getElementById('btn-submit-clientes').innerText = "Atualizar Cadastro";
