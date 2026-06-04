@@ -20,6 +20,7 @@ function renderClientes() {
                 <input type="text" id="c-nome" placeholder="Nome Completo / Razão Social" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="text" id="c-doc" placeholder="Insira o CNPJ" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="text" id="c-tel" placeholder="Telefone de Contato" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
+                <input type="email" id="c-email" placeholder="E-mail" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <div class="md:col-span-4">
                     <input type="text" id="c-rota" placeholder="Endereço Completo / Rota de Entrega" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 </div>
@@ -68,29 +69,56 @@ function toggleDocumentLabel(type) {
     }
 }
 
-function saveCliente(e) {
+async function saveCliente(e) {
     e.preventDefault();
-    
-    // Captura qual tipo de rádio está ativo (CNPJ ou CPF)
-    const tipoDocAtivo = document.querySelector('input[name="tipo_doc"]:checked').value;
+
+    const tipoDocAtivo = document.querySelector(
+        'input[name="tipo_doc"]:checked'
+    ).value;
 
     const data = {
         tipoDoc: tipoDocAtivo,
         nome: document.getElementById('c-nome').value,
         doc: document.getElementById('c-doc').value,
         tel: document.getElementById('c-tel').value,
+        email: document.getElementById('c-email').value,
         rota: document.getElementById('c-rota').value
     };
 
-    if (editIndex !== null) {
-        db.clientes[editIndex] = data;
-        editIndex = null;
-    } else {
-        db.clientes.push(data);
+    try {
+
+        const resposta = await fetch(
+            "API/clientes/inserir.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if(resultado.sucesso){
+
+            alert(resultado.mensagem);
+
+            document.querySelector("form").reset();
+
+        }else{
+
+            alert("Erro: " + resultado.mensagem);
+
+        }
+
+    } catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao conectar com o servidor.");
+
     }
-    
-    saveDB();
-    renderClientes();
 }
 
 function editCliente(idx) {
@@ -103,6 +131,7 @@ function editCliente(idx) {
     document.getElementById('c-nome').value = item.nome;
     document.getElementById('c-doc').value = item.doc || '';
     document.getElementById('c-tel').value = item.tel;
+    document.getElementById('c-email').value = item.email || '';
     document.getElementById('c-rota').value = item.rota;
 
     // Marca o botão de rádio correto na edição
