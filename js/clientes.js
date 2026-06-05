@@ -155,23 +155,37 @@ async function saveCliente(e) {
     }
 }
 
-function editCliente(idx) {
-    editIndex = idx;
-    const item = clientes[idx];
+function editCliente(id) {
+
+    const item = clientes.find(
+        cliente => cliente.id == id
+    );
+
+    if(!item){
+        alert("Cliente não encontrado.");
+        return;
+    }
+
     clienteIdEditando = item.id;
-    
-    document.getElementById('form-title-clientes').innerText = "Editar Cliente";
-    document.getElementById('btn-submit-clientes').innerText = "Atualizar Cadastro";
-    
+
+    document.getElementById('form-title-clientes').innerText =
+        "Editar Cliente";
+
+    document.getElementById('btn-submit-clientes').innerText =
+        "Atualizar Cadastro";
+
     document.getElementById('c-nome').value = item.nome;
     document.getElementById('c-doc').value = item.doc || '';
     document.getElementById('c-tel').value = item.tel;
     document.getElementById('c-email').value = item.email || '';
     document.getElementById('c-rota').value = item.rota;
 
-    // Marca o botão de rádio correto na edição
     const tipo = item.tipoDoc || 'CNPJ';
-    document.querySelector(`input[name="tipo_doc"][value="${tipo}"]`).checked = true;
+
+    document.querySelector(
+        `input[name="tipo_doc"][value="${tipo}"]`
+    ).checked = true;
+
     toggleDocumentLabel(tipo);
 }
 
