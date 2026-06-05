@@ -74,7 +74,7 @@ async function renderClientes() {
                             <td class="p-4 text-gray-600">${c.email || 'Não informado'}</td>
                             <td class="p-4 text-gray-600">${c.rota}</td>
                             <td class="p-4 text-center space-x-2">
-                                <button onclick="editCliente(${idx})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
+                                <button onclick="editCliente(${c.id})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
                                 <button onclick="excluirCliente(${c.id})" class="text-red-600 hover:text-red-900 font-medium">Excluir</button>
                             </td>
                         </tr>
