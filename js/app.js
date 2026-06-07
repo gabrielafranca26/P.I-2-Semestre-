@@ -62,8 +62,8 @@ function switchPage(pageId) {
     }
 
     const titles = {
-        home: "Painel Geral", clientes: "Gestão de Clientes", produtos: "Catálogo de Produtos",
-        pedidos: "Pedidos de Venda", fornecedores: "Fornecedores Parceiros", despesas: "Controle de Despesas", relatorios: "Relatórios Estratégicos"
+        home: "Painel Geral", clientes: "Gestão de Clientes", produtos: "Gestão de Produtos",
+        pedidos: "Gestão de Pedidos", fornecedores: "Gestão de Fornecedores", despesas: "Controle de Despesas", relatorios: "Relatórios e Métricas"
     };
     document.getElementById('page-title').innerText = titles[pageId] || "Painel";
 
@@ -126,7 +126,7 @@ async function renderHome() {
                 </div>
 
                 <!-- DESPESAS -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-eros-red">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
                     <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Despesas</p>
                     <p class="text-2xl font-black text-red-700 mt-1">R$ ${parseFloat(m.despesas).toFixed(2)}</p>
                 </div>

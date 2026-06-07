@@ -21,11 +21,13 @@ async function renderProdutos() {
         <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-800" id="form-title-produtos">Novo Produto</h3>
             <form onsubmit="saveProduto(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <input type="text" id="p-nome" placeholder="Nome do Produto" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
-                <input type="text" id="p-descricao" placeholder="Descrição" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                <input type="text" id="p-nome" placeholder="Nome do Produto" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">                
                 <input type="number" step="0.01" id="p-precocusto" placeholder="Preço de Custo" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="number" step="0.01" id="p-precovenda" placeholder="Preço de Venda" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="number" id="p-estoque" placeholder="Estoque" required class="border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                <div class="md:col-span-4">
+                    <textarea id="p-descricao" placeholder="Descrição" required rows="4" class="w-full border p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none resize-none"></textarea>
+                </div>
                 <button type="submit" id="btn-submit-produtos" class="bg-eros-red hover:bg-red-800 text-white font-medium p-2.5 rounded-lg text-sm transition sm:col-span-2 md:col-span-4">Adicionar Produto</button>
             </form>
         </div>

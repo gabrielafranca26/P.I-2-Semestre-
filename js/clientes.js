@@ -43,7 +43,7 @@ async function renderClientes() {
                 <input type="text" id="c-doc" placeholder="Insira o CNPJ" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="text" id="c-tel" placeholder="Telefone de Contato" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="email" id="c-email" placeholder="E-mail" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
-                <div class="md:col-span-4">
+                <div class="md:col-span-3">
                     <input type="text" id="c-rota" placeholder="Endereço Completo / Rota de Entrega" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 </div>
 

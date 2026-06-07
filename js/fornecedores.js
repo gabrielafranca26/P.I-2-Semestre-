@@ -18,11 +18,11 @@ async function renderFornecedores() {
     area.innerHTML = `
         <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-800">Novo Fornecedor</h3>
-            <form onsubmit="saveFornecedor(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <form onsubmit="saveFornecedor(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="text" id="f-nome" placeholder="Razão Social / Nome" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
                 <input type="text" id="f-cnpj" placeholder="CNPJ / CPF" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
                 <input type="text" id="f-tel" placeholder="Telefone" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
-                <input type="text" id="f-email" placeholder="E-mail" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
+                <input type="text" id="f-email" placeholder="E-mail" required class="w-full border p-2.5 rounded-lg text-sm focus:outline-none">
                 <button type="submit" id="btn-submit-fornecedor" class="bg-eros-red hover:bg-red-800 text-white font-medium p-2.5 rounded-lg text-sm transition md:col-span-3">Salvar Fornecedor</button>
             </form>
         </div>

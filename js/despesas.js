@@ -20,10 +20,10 @@ async function renderDespesas() {
     area.innerHTML = `
         <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
             <h3 id="form-title-despesas" class="text-lg font-bold mb-4 text-gray-800">Lançar Despesa</h3>
-            <form onsubmit="saveDespesa(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <input type="date" id="d-data" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
-                <input type="text" id="d-desc" placeholder="Descrição do gasto" required class="border p-2.5 rounded-lg text-sm sm:col-span-2 focus:outline-none">
+            <form onsubmit="saveDespesa(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="date" id="d-data" required class="border p-2.5 rounded-lg text-sm focus:outline-none">                
                 <input type="number" step="0.01" id="d-valor" placeholder="Valor (R$)" required class="border p-2.5 rounded-lg text-sm focus:outline-none">
+                <textarea type="text" id="d-desc" placeholder="Descrição do gasto" required class="border p-2.5 rounded-lg text-sm sm:col-span-2 focus:outline-none"></textarea>
                 <button type="submit" id="btn-submit-despesas" class="bg-eros-red hover:bg-red-800 text-white font-medium p-2.5 rounded-lg text-sm transition sm:col-span-3">Lançar</button>
             </form>
         </div>
@@ -32,7 +32,7 @@ async function renderDespesas() {
                 <thead class="bg-gray-50 border-b">
                     <tr>
                         <th class="p-4 font-semibold text-sm text-gray-700">Data</th>
-                        <th class="p-4 font-semibold text-sm text-gray-700">Descrição do Custo</th>
+                        <th class="p-4 font-semibold text-sm text-gray-700">Descrição da Despesa</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Valor Lançado</th>
                         <th class="p-4 font-semibold text-sm text-gray-700 text-center">Ações</th>
                     </tr>
