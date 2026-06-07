@@ -63,7 +63,7 @@ async function renderClientes() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${clientes.map((c, idx) => `
+                    ${clientes.map((c) => `
                         <tr class="border-b hover:bg-gray-50 text-sm">
                             <td class="p-4 font-medium text-gray-900">${c.nome}</td>
                             <td class="p-4 text-gray-600 font-mono text-xs">
@@ -135,7 +135,7 @@ async function saveCliente(e) {
             alert(resultado.mensagem);
 
             clienteIdEditando = null;
-            editIndex = null;
+            // Índice removido
 
             renderClientes();
 

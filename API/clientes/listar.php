@@ -4,7 +4,7 @@
 require_once("../../config/conexao.php");
 
 /* Criando a busca - comando sql */
-$sql = "SELECT * FROM cliente";
+$sql = "SELECT * FROM cliente ORDER BY IDcliente ASC";
 
 /* Executando a Busca */
 $resultado = $conexao->query($sql);

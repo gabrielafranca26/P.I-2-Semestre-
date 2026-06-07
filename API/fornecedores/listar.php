@@ -11,7 +11,7 @@ $sql = "
         cnpj_fornecedor AS cnpj,
         telefone_fornecedor AS telefone,
         email_fornecedor AS email
-    FROM fornecedor
+FROM fornecedor ORDER BY IDfornecedor ASC
 ";
 
 /* Executando o comando SQL */

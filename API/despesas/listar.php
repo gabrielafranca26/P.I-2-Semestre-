@@ -7,7 +7,7 @@ $sql = "SELECT
             data_despesa,
             descricao_despesa,
             valor_despesa
-        FROM despesa";
+        FROM despesa ORDER BY IDdespesa ASC";
 
 $resultado = $conexao->query($sql);
 

@@ -44,16 +44,8 @@ function checkAuth() {
     if(window.lucide) lucide.createIcons();
 }
 
-// ====== BANCO DE DADOS LOCALSTORAGE ======
-let db = JSON.parse(localStorage.getItem('eros_db')) || {
-    clientes: [], produtos: [], pedidos: [], fornecedores: [], despesas: []
-};
-
-let editIndex = null;
-
-function saveDB() {
-    localStorage.setItem('eros_db', JSON.stringify(db));
-}
+// O sistema agora utiliza Banco de Dados MySQL via API.
+let editIndex = null; // Mantido apenas por compatibilidade temporária se necessário, mas não utilizado.
 
 function switchPage(pageId) {
     const area = document.getElementById('content-area');
@@ -76,33 +68,7 @@ function switchPage(pageId) {
     document.getElementById('page-title').innerText = titles[pageId] || "Painel";
 
     if (pageId === 'home') {
-        const totalDespesas = db.despesas.reduce((acc, c) => acc + parseFloat(c.valor || 0), 0);
-        const totalPedidos = db.pedidos.reduce((acc, c) => acc + parseFloat(c.total || 0), 0);
-        
-        area.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-eros-red">
-                    <p class="text-sm text-gray-500 font-medium">Clientes Ativos</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">${db.clientes.length}</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-eros-yellow">
-                    <p class="text-sm text-gray-500 font-medium">Produtos Cadastrados</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">${db.produtos.length}</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                    <p class="text-sm text-gray-500 font-medium">Faturamento Bruto</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">R$ ${totalPedidos.toFixed(2)}</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
-                    <p class="text-sm text-gray-500 font-medium">Custos Operacionais</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">R$ ${totalDespesas.toFixed(2)}</p>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Bem-vindo ao Painel Integrado - Eros Atacadista</h3>
-                <p class="text-gray-600 text-sm">Protótipo funcional desenvolvido para o Projeto Integrador. Controle de acesso e persistência ativados.</p>
-            </div>
-        `;
+        renderHome();
     } 
     else if (pageId === 'clientes') renderClientes();
     else if (pageId === 'produtos') renderProdutos();
@@ -114,13 +80,78 @@ function switchPage(pageId) {
     if(window.lucide) lucide.createIcons();
 }
 
-function deleteItem(key, idx, callback) {
-    if(confirm("Deseja realmente remover este registro?")) {
-        db[key].splice(idx, 1);
-        saveDB();
-        callback();
+async function renderHome() {
+    const area = document.getElementById('content-area');
+    
+    try {
+        const res = await fetch("API/dashboard.php");
+        const m = await res.json();
+
+        area.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <!-- CLIENTES -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Clientes Cadastrados</p>
+                    <p class="text-2xl font-black text-gray-800 mt-1">${m.total_clientes}</p>
+                </div>
+
+                <!-- PRODUTOS -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-eros-yellow">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Produtos cadastrados</p>
+                    <p class="text-2xl font-black text-gray-800 mt-1">${m.total_produtos}</p>
+                </div>
+
+                <!-- FATURAMENTO BRUTO -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Faturamento</p>
+                    <p class="text-2xl font-black text-green-700 mt-1">R$ ${parseFloat(m.faturamento).toFixed(2)}</p>
+                </div>
+
+                <!-- FATURAMENTO MENSAL -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-600">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Faturamento Mensal</p>
+                    <p class="text-2xl font-black text-green-800 mt-1">R$ ${parseFloat(m.faturamento_mensal).toFixed(2)}</p>
+                </div>
+
+                <!-- FATURAMENTO LIQUIDADO -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Faturamento Liquidado</p>
+                    <p class="text-2xl font-black text-teal-700 mt-1">R$ ${parseFloat(m.faturamento_liquidado).toFixed(2)}</p>
+                </div>
+
+                <!-- FATURAMENTO MENSAL LIQUIDADO -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-600">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Faturamento Mensal Liquidado</p>
+                    <p class="text-2xl font-black text-teal-800 mt-1">R$ ${parseFloat(m.faturamento_mensal_liquidado).toFixed(2)}</p>
+                </div>
+
+                <!-- DESPESAS -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-eros-red">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Despesas</p>
+                    <p class="text-2xl font-black text-red-700 mt-1">R$ ${parseFloat(m.despesas).toFixed(2)}</p>
+                </div>
+
+                <!-- DESPESAS MENSAIS -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-600">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Despesas Mensais</p>
+                    <p class="text-2xl font-black text-red-800 mt-1">R$ ${parseFloat(m.despesas_mensais).toFixed(2)}</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Painel de Gestão - Eros Atacadista</h3>
+                <p class="text-gray-600 text-sm">Mês corrente: <span class="font-bold">${new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}</span></p>
+            </div>
+        `;
+    } catch (err) {
+        console.error(err);
+        area.innerHTML = `<p class="text-red-500">Erro ao carregar indicadores do banco de dados.</p>`;
     }
+
+    if(window.lucide) lucide.createIcons();
 }
+
+// Função deleteItem removida pois agora cada módulo tem sua própria função de exclusão via API.
 
 // Inicialização alterada para checar a segurança primeiro
 window.onload = () => { checkAuth(); };

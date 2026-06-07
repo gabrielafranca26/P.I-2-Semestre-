@@ -9,7 +9,7 @@ $sql = "SELECT
             preco_custo,
             preco_venda,
             quantidade_estoque
-        FROM produto";
+        FROM produto ORDER BY IDproduto ASC";
 
 $resultado = $conexao->query($sql);
 

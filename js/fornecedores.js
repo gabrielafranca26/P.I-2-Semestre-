@@ -38,7 +38,7 @@ async function renderFornecedores() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${fornecedores.map((f, idx) => `
+                    ${fornecedores.map((f) => `
                         <tr class="border-b hover:bg-gray-50 text-sm">
                             <td class="p-4 font-medium text-gray-900">${f.nome}</td>
                             <td class="p-4 text-gray-600">${f.cnpj}</td>
