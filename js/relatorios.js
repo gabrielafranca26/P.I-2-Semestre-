@@ -92,10 +92,25 @@ async function renderRelatorios() {
                 <!-- ÁREA DE RESULTADO DO RELATÓRIO -->
                 <div id="relatorio-resultado" class="bg-white p-6 rounded-xl shadow-sm hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 id="relatorio-titulo" class="text-lg font-bold text-gray-800">Resultado do Relatório</h3>
-                        <button onclick="document.getElementById('relatorio-resultado').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
-                            <i data-lucide="x-circle" class="w-5 h-5"></i>
-                        </button>
+                        <h3 id="relatorio-titulo" class="text-lg font-bold text-gray-800">
+                            Resultado do Relatório
+                        </h3>
+
+                        <div class="flex gap-2">
+
+                            <button
+                                onclick="exportarPDF()"
+                                class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-bold">
+                                Exportar PDF
+                            </button>
+
+                            <button
+                                onclick="document.getElementById('relatorio-resultado').classList.add('hidden')"
+                                class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="x-circle" class="w-5 h-5"></i>
+                            </button>
+
+                        </div>
                     </div>
                     <div id="relatorio-filtros" class="mb-4 hidden"></div>
                     <div id="relatorio-tabela-container" class="overflow-x-auto">
@@ -308,4 +323,79 @@ async function executarPendenciasPeriodo() {
             <td class="p-3 font-bold text-red-600">R$ ${parseFloat(d.valor_pendente).toFixed(2)}</td>
         </tr>
     `).join('');
+}
+
+/* ========== EXPORTAR RELATÓRIOS EM PDF ========== */
+
+function exportarPDF() {
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
+    const titulo =
+        document.getElementById('relatorio-titulo')
+        .innerText;
+
+    doc.setFontSize(16);
+
+    doc.text(
+        titulo,
+        14,
+        15
+    );
+
+    const headers = [];
+
+    document
+        .querySelectorAll('#relatorio-head th')
+        .forEach(th => {
+
+            headers.push(
+                th.innerText
+            );
+
+        });
+
+    const rows = [];
+
+    document
+        .querySelectorAll('#relatorio-body tr')
+        .forEach(tr => {
+
+            const row = [];
+
+            tr.querySelectorAll('td')
+                .forEach(td => {
+
+                    row.push(
+                        td.innerText.trim()
+                    );
+
+                });
+
+            if(row.length > 0){
+                rows.push(row);
+            }
+
+        });
+
+    doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 25,
+        styles: {
+            fontSize: 9
+        }
+    });
+
+    const nomeArquivo =
+        titulo
+        .replace(/\s+/g, "_")
+        .toLowerCase();
+
+    doc.save(
+        `${nomeArquivo}.pdf`
+    );
+
 }
