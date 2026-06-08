@@ -1,48 +1,105 @@
 // ====== CONTROLE DE AUTENTICAÇÃO (LOGIN) ======
-const USUARIO_CORRETO = "admin";
-const SENHA_CORRETA = "1234";
+async function handleLogin(e) {
 
-function handleLogin(e) {
     e.preventDefault();
+
     const userIn = document.getElementById('login-user').value;
     const passIn = document.getElementById('login-pass').value;
     const errorMsg = document.getElementById('login-error');
 
-    if (userIn === USUARIO_CORRETO && passIn === SENHA_CORRETA) {
-        sessionStorage.setItem('eros_logged', 'true');
-        errorMsg.classList.add('hidden');
-        checkAuth();
-    } else {
+    try {
+
+        const resposta = await fetch(
+            "config/authentication.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: userIn,
+                    senha: passIn
+                })
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if(resultado.sucesso){
+
+            checkAuth();
+
+        }else{
+
+            errorMsg.innerText = resultado.mensagem;
+            errorMsg.classList.remove('hidden');
+
+        }
+
+    } catch(erro){
+
+        console.error(erro);
+
+        errorMsg.innerText = "Erro ao conectar com o servidor.";
         errorMsg.classList.remove('hidden');
+
     }
+
 }
 
-function handleLogout() {
-    sessionStorage.removeItem('eros_logged');
+
+async function handleLogout() {
+
+    await fetch(
+        "logout.php"
+    );
+
     checkAuth();
+
 }
 
-function checkAuth() {
-    const isLogged = sessionStorage.getItem('eros_logged') === 'true';
-    const loginScreen = document.getElementById('login-screen');
-    const sidebar = document.getElementById('main-sidebar');
-    const content = document.getElementById('main-content');
+async function checkAuth() {
 
-    if (isLogged) {
-        loginScreen.classList.add('hidden');
-        sidebar.classList.remove('hidden');
-        content.classList.remove('hidden');
-        switchPage('home'); // Abre na home
-    } else {
-        loginScreen.classList.remove('hidden');
-        sidebar.classList.add('hidden');
-        content.classList.add('hidden');
-        // Limpa campos do login
-        document.getElementById('login-user').value = '';
-        document.getElementById('login-pass').value = '';
+    try {
+
+        const resposta = await fetch(
+            "config/check_login.php"
+        );
+
+        const resultado = await resposta.json();
+
+        const loginScreen = document.getElementById('login-screen');
+        const sidebar = document.getElementById('main-sidebar');
+        const content = document.getElementById('main-content');
+
+        if(resultado.logado){
+
+            loginScreen.classList.add('hidden');
+            sidebar.classList.remove('hidden');
+            content.classList.remove('hidden');
+
+            switchPage('home');
+
+        }else{
+
+            loginScreen.classList.remove('hidden');
+            sidebar.classList.add('hidden');
+            content.classList.add('hidden');
+
+        }
+
+    }catch(erro){
+
+        console.error(erro);
+
     }
-    if(window.lucide) lucide.createIcons();
+
+    if(window.lucide){
+        lucide.createIcons();
+    }
+
 }
+
 
 // O sistema agora utiliza Banco de Dados MySQL via API.
 let editIndex = null; // Mantido apenas por compatibilidade temporária se necessário, mas não utilizado.

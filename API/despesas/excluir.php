@@ -1,6 +1,8 @@
 <?php
 
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
+
 
 $dados = json_decode(
     file_get_contents("php://input"),

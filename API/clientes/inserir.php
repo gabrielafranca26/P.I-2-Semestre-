@@ -3,6 +3,8 @@
 /* Conecta ao banco */
 require_once("../../config/conexao.php");
 
+require_once "../../config/protect_api.php";
+
 /* Recebe os dados enviados pelo JavaScript */
 $dados = json_decode(file_get_contents("php://input"), true);
 

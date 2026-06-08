@@ -2,6 +2,7 @@
 
 /* Criando conexão com o banco */
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 /* Recebe dados enviados pelo JS */
 $dados = json_decode(

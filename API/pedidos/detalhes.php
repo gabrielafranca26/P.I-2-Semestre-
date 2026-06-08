@@ -1,5 +1,6 @@
 <?php
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 if (!isset($_GET['id'])) {
     die(json_encode(["sucesso" => false, "mensagem" => "ID da venda não informado."]));

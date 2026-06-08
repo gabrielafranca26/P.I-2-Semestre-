@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 $sql = "SELECT
             IDproduto,

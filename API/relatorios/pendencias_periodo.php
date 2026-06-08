@@ -1,5 +1,6 @@
 <?php
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 $data_ini = $_GET['data_inicial'] ?? date('Y-m-01');
 $data_fim = $_GET['data_final'] ?? date('Y-m-d');

@@ -1,5 +1,6 @@
 <?php
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 $dados_req = json_decode(file_get_contents("php://input"), true);
 $data_ini = $dados_req['data_inicial'] ?? date('Y-m-01');

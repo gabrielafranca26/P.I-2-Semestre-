@@ -1,5 +1,6 @@
 <?php
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 $sql = "CALL sp_LucroPorProduto()";
 $resultado = $conexao->query($sql);

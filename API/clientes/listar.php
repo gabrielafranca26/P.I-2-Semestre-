@@ -3,6 +3,8 @@
 /* Conectando com o banco */
 require_once("../../config/conexao.php");
 
+require_once "../../config/protect_api.php";
+
 /* Criando a busca - comando sql */
 $sql = "SELECT * FROM cliente ORDER BY IDcliente ASC";
 

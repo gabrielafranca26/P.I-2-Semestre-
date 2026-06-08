@@ -1,5 +1,6 @@
 <?php
 require_once("../../config/conexao.php");
+require_once "../../config/protect_api.php";
 
 $id_cliente = $_GET['id_cliente'] ?? 0;
 
