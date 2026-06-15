@@ -7,12 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .bg-eros-black { background-color: #0b0b0b; }
-        .text-eros-red { color: #a70007; }
-        .bg-eros-red { background-color: #a70007; }
-        .text-eros-yellow { color: #fcd535; }
-        .bg-eros-yellow { background-color: #fcd535; }
-        .border-eros-yellow { border-color: #fcd535; }
+        .bg-eros-black { background-color: #0f0f0f; }
+        .text-eros-red { color: #960303; }
+        .bg-eros-red { background-color: #960303; }
+        .text-eros-yellow { color: #FCD203; }
+        .bg-eros-yellow { background-color: #FCD203; }
+        .border-eros-yellow { border-color: #FCD203; }
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -51,7 +51,7 @@
         <div>
             <div class="p-3 md:p-6 border-b border-gray-800 flex md:flex-col items-center justify-between md:justify-center gap-2">
                 <div class="flex items-center gap-3 md:justify-center md:w-full">
-                    <img src="image_5585f8.png" alt="Eros Logo" class="h-10 md:h-16 object-contain" onerror="this.style.display='none'; document.getElementById('text-logo-menu').style.display='block'">
+                    <img src="" alt="Eros Logo" class="h-10 md:h-16 object-contain" onerror="this.style.display='none'; document.getElementById('text-logo-menu').style.display='block'">
                     <div id="text-logo-menu" style="display:none;" class="text-left md:text-center">
                         <div class="text-xl md:text-3xl font-black text-eros-red">ER❤️S</div>
                         <div class="text-[10px] md:text-xs font-bold text-eros-yellow tracking-widest uppercase">ATACADISTA</div>
@@ -95,9 +95,9 @@
             <h1 id="page-title" class="text-lg md:text-2xl font-bold text-gray-800">Painel Geral</h1>
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">Proprietário</span>
+                    <span class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">Eros</span>
                     <div class="w-8 h-8 rounded-full border border-eros-yellow overflow-hidden bg-black">
-                        <img src="image_5585f8.png" alt="Perfil" class="w-full h-full object-cover">
+                        <img src="./images/eros.jpeg" alt="Perfil" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <!-- Botão de Sair/Logout -->
@@ -120,5 +120,10 @@
     <script src="js/despesas.js"></script>
     <script src="js/relatorios.js"></script>
     <script src="js/app.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
 </body>
 </html>

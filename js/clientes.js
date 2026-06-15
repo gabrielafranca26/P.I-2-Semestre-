@@ -1,5 +1,27 @@
-function renderClientes() {
+/* ========== VARIÁVEIS ========== */
+
+let clientes = [];
+let clienteIdEditando = null;
+
+/* ========== FUNÇÕES ========== */
+
+/* ===== FUNÇÃO - API LISTAR CLIENTES ===== */
+async function carregarClientes() {
+
+    const resposta = await fetch(
+        "API/clientes/listar.php"
+    );
+
+    clientes = await resposta.json();
+
+    return clientes;
+
+}
+
+/* ===== FUNÇÃO - CONSTRUÇÃO DA PÁGINA ===== */
+async function renderClientes() {
     const area = document.getElementById('content-area');
+    const clientes = await carregarClientes();
     area.innerHTML = `
         <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-800" id="form-title-clientes">Novo Cliente</h3>
@@ -20,7 +42,8 @@ function renderClientes() {
                 <input type="text" id="c-nome" placeholder="Nome Completo / Razão Social" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="text" id="c-doc" placeholder="Insira o CNPJ" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 <input type="text" id="c-tel" placeholder="Telefone de Contato" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
-                <div class="md:col-span-4">
+                <input type="email" id="c-email" placeholder="E-mail" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
+                <div class="md:col-span-3">
                     <input type="text" id="c-rota" placeholder="Endereço Completo / Rota de Entrega" required class="border p-2.5 rounded-lg text-sm w-full focus:ring-2 focus:ring-red-700 focus:outline-none">
                 </div>
 
@@ -34,12 +57,13 @@ function renderClientes() {
                         <th class="p-4 font-semibold text-sm text-gray-700">Nome / Empresa</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Tipo / Documento</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Contato</th>
+                        <th class="p-4 font-semibold text-sm text-gray-700">E-mail</th>
                         <th class="p-4 font-semibold text-sm text-gray-700">Rota / Endereço</th>
                         <th class="p-4 font-semibold text-sm text-gray-700 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${db.clientes.map((c, idx) => `
+                    ${clientes.map((c) => `
                         <tr class="border-b hover:bg-gray-50 text-sm">
                             <td class="p-4 font-medium text-gray-900">${c.nome}</td>
                             <td class="p-4 text-gray-600 font-mono text-xs">
@@ -47,10 +71,11 @@ function renderClientes() {
                                 ${c.doc || 'Não informado'}
                             </td>
                             <td class="p-4 text-gray-600">${c.tel}</td>
+                            <td class="p-4 text-gray-600">${c.email || 'Não informado'}</td>
                             <td class="p-4 text-gray-600">${c.rota}</td>
                             <td class="p-4 text-center space-x-2">
-                                <button onclick="editCliente(${idx})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
-                                <button onclick="deleteItem('clientes', ${idx}, renderClientes)" class="text-red-600 hover:text-red-900 font-medium">Excluir</button>
+                                <button onclick="editCliente(${c.id})" class="text-blue-600 hover:text-blue-900 font-medium">Editar</button>
+                                <button onclick="excluirCliente(${c.id})" class="text-red-600 hover:text-red-900 font-medium">Excluir</button>
                             </td>
                         </tr>
                     `).join('')}
@@ -60,7 +85,7 @@ function renderClientes() {
     `;
 }
 
-// Muda o placeholder do campo baseado no rádio ativo
+/* Muda o placeholder do campo baseado no rádio ativo */
 function toggleDocumentLabel(type) {
     const docInput = document.getElementById('c-doc');
     if (docInput) {
@@ -68,45 +93,144 @@ function toggleDocumentLabel(type) {
     }
 }
 
-function saveCliente(e) {
+/* ===== FUNÇÃO - API INSERIR E EDITAR CLIENTE ===== */
+async function saveCliente(e) {
     e.preventDefault();
-    
-    // Captura qual tipo de rádio está ativo (CNPJ ou CPF)
-    const tipoDocAtivo = document.querySelector('input[name="tipo_doc"]:checked').value;
+
+    const tipoDocAtivo = document.querySelector(
+        'input[name="tipo_doc"]:checked'
+    ).value;
 
     const data = {
+        id: clienteIdEditando,
         tipoDoc: tipoDocAtivo,
         nome: document.getElementById('c-nome').value,
         doc: document.getElementById('c-doc').value,
         tel: document.getElementById('c-tel').value,
+        email: document.getElementById('c-email').value,
         rota: document.getElementById('c-rota').value
     };
 
-    if (editIndex !== null) {
-        db.clientes[editIndex] = data;
-        editIndex = null;
-    } else {
-        db.clientes.push(data);
+    try {
+
+        const url = clienteIdEditando
+            ? "API/clientes/editar.php"
+            : "API/clientes/inserir.php";  
+
+        const resposta = await fetch(
+            url,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if(resultado.sucesso){
+
+            alert(resultado.mensagem);
+
+            clienteIdEditando = null;
+            // Índice removido
+
+            renderClientes();
+
+
+        }else{
+
+            alert("Erro: " + resultado.mensagem);
+
+        }
+
+    } catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao conectar com o servidor.");
+
     }
-    
-    saveDB();
-    renderClientes();
 }
 
-function editCliente(idx) {
-    editIndex = idx;
-    const item = db.clientes[idx];
-    
-    document.getElementById('form-title-clientes').innerText = "Editar Cliente";
-    document.getElementById('btn-submit-clientes').innerText = "Atualizar Cadastro";
-    
+function editCliente(id) {
+
+    const item = clientes.find(
+        cliente => cliente.id == id
+    );
+
+    if(!item){
+        alert("Cliente não encontrado.");
+        return;
+    }
+
+    clienteIdEditando = item.id;
+
+    document.getElementById('form-title-clientes').innerText =
+        "Editar Cliente";
+
+    document.getElementById('btn-submit-clientes').innerText =
+        "Atualizar Cadastro";
+
     document.getElementById('c-nome').value = item.nome;
     document.getElementById('c-doc').value = item.doc || '';
     document.getElementById('c-tel').value = item.tel;
+    document.getElementById('c-email').value = item.email || '';
     document.getElementById('c-rota').value = item.rota;
 
-    // Marca o botão de rádio correto na edição
     const tipo = item.tipoDoc || 'CNPJ';
-    document.querySelector(`input[name="tipo_doc"][value="${tipo}"]`).checked = true;
+
+    document.querySelector(
+        `input[name="tipo_doc"][value="${tipo}"]`
+    ).checked = true;
+
     toggleDocumentLabel(tipo);
+}
+
+/* ===== FUNÇÃO ENCLUIR CLIENTE ===== */
+async function excluirCliente(id) {
+
+    if(!confirm("Deseja realmente excluir este cliente?")){
+        return;
+    }
+
+    try{
+
+        const resposta = await fetch(
+            "API/clientes/excluir.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if(resultado.sucesso){
+
+            alert(resultado.mensagem);
+
+            renderClientes();
+
+        }else{
+
+            alert("Erro: " + resultado.mensagem);
+
+        }
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao conectar com o servidor.");
+
+    }
+
 }
