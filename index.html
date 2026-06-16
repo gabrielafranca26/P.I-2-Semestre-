@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eros Atacadista</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .bg-eros-black { background-color: #0b0b0b; }
+        .text-eros-red { color: #a70007; }
+        .bg-eros-red { background-color: #a70007; }
+        .text-eros-yellow { color: #fcd535; }
+        .bg-eros-yellow { background-color: #fcd535; }
+        .border-eros-yellow { border-color: #fcd535; }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <!-- TELA DE LOGIN (Bloqueia o sistema se não estiver autenticado) -->
+    <div id="login-screen" class="fixed inset-0 bg-eros-black z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md border-t-4 border-eros-red text-center">
+            <div class="mb-4">
+                <div class="text-3xl font-black text-eros-red">ER❤️S</div>
+                <div class="text-xs font-bold text-gray-900 tracking-widest uppercase">ATACADISTA</div>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-1">Painel do Proprietário</h2>
+            <p class="text-xs text-gray-500 mb-6">Insira suas credenciais administrativas para acessar.</p>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Usuário / E-mail</label>
+                    <input type="text" id="login-user" required placeholder="admin" class="w-full border p-3 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Senha Secreta</label>
+                    <input type="password" id="login-pass" required placeholder="••••••••" class="w-full border p-3 rounded-lg text-sm focus:ring-2 focus:ring-red-700 focus:outline-none">
+                </div>
+                <div id="login-error" class="text-red-600 text-xs font-medium hidden">Usuário ou senha incorretos!</div>
+                <button type="submit" class="w-full bg-eros-red hover:bg-red-800 text-white font-bold py-3 rounded-lg text-sm transition uppercase tracking-wider shadow-lg">Entrar no Sistema</button>
+            </form>
+            
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DO SISTEMA (SÓ APARECE SE LOGADO) -->
+    <!-- SIDEBAR / NAVBAR RESPONSIVA -->
+    <aside id="main-sidebar" class="bg-eros-black text-white w-full md:w-64 flex flex-col justify-between shadow-xl z-50 flex-shrink-0 hidden">
+        <div>
+            <div class="p-3 md:p-6 border-b border-gray-800 flex md:flex-col items-center justify-between md:justify-center gap-2">
+                <div class="flex items-center gap-3 md:justify-center md:w-full">
+                    <img src="image_5585f8.png" alt="Eros Logo" class="h-10 md:h-16 object-contain" onerror="this.style.display='none'; document.getElementById('text-logo-menu').style.display='block'">
+                    <div id="text-logo-menu" style="display:none;" class="text-left md:text-center">
+                        <div class="text-xl md:text-3xl font-black text-eros-red">ER❤️S</div>
+                        <div class="text-[10px] md:text-xs font-bold text-eros-yellow tracking-widest uppercase">ATACADISTA</div>
+                    </div>
+                </div>
+          
+            </div>
+            
+            <nav class="flex md:flex-col overflow-x-auto md:overflow-x-visible p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-1 scrollbar-none">
+                <button onclick="switchPage('home')" id="btn-home" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg bg-eros-red text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="home" class="w-4 h-4 md:w-5 md:h-5"></i> Home
+                </button>
+                <button onclick="switchPage('clientes')" id="btn-clientes" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="users" class="w-4 h-4 md:w-5 md:h-5"></i> Clientes
+                </button>
+                <button onclick="switchPage('produtos')" id="btn-produtos" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="package" class="w-4 h-4 md:w-5 md:h-5"></i> Produtos
+                </button>
+                <button onclick="switchPage('pedidos')" id="btn-pedidos" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i> Pedidos
+                </button>
+                <button onclick="switchPage('fornecedores')" id="btn-fornecedores" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="truck" class="w-4 h-4 md:w-5 md:h-5"></i> Fornecedores
+                </button>
+                <button onclick="switchPage('despesas')" id="btn-despesas" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="dollar-sign" class="w-4 h-4 md:w-5 md:h-5"></i> Despesas
+                </button>
+                <button onclick="switchPage('relatorios')" id="btn-relatorios" class="nav-btn whitespace-nowrap flex items-center gap-2 md:gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-900 hover:text-white font-medium transition text-xs md:text-base">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 md:w-5 md:h-5"></i> Relatórios
+                </button>
+            </nav>
+        </div>
+        <div class="hidden md:block p-4 border-t border-gray-800 text-center text-xs text-gray-500">
+            &copy; 2026 Eros Atacadista.
+        </div>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <main id="main-content" class="flex-1 flex flex-col overflow-y-auto w-full hidden">
+        <header class="bg-white shadow-sm px-4 md:px-8 py-3 md:py-4 flex justify-between items-center border-b flex-shrink-0">
+            <h1 id="page-title" class="text-lg md:text-2xl font-bold text-gray-800">Painel Geral</h1>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">Proprietário</span>
+                    <div class="w-8 h-8 rounded-full border border-eros-yellow overflow-hidden bg-black">
+                        <img src="image_5585f8.png" alt="Perfil" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <!-- Botão de Sair/Logout -->
+                <button onclick="handleLogout()" class="text-gray-400 hover:text-red-600 transition p-1" title="Sair do Sistema">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="content-area" class="p-4 md:p-8 max-w-7xl w-full mx-auto">
+            <!-- Conteúdo injetado via JS -->
+        </div>
+    </main>
+
+    <!-- Scripts Modulares -->
+    <script src="js/clientes.js"></script>
+    <script src="js/produtos.js"></script>
+    <script src="js/pedidos.js"></script>
+    <script src="js/fornecedores.js"></script>
+    <script src="js/despesas.js"></script>
+    <script src="js/relatorios.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
